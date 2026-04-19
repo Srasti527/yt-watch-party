@@ -1,14 +1,12 @@
 import { useEffect, useRef } from 'react';
 import type { YTPlayer } from '../youtube';
+import { useSocket } from '../context/SocketContext';
 
 type YouTubePlayerProps = {
   videoId: string;
   currentTime: number;
   isPlaying: boolean;
-  isHost: boolean;
-  onHostPlay: (time: number) => void;
-  onHostPause: (time: number) => void;
-  onHostSeek: (time: number) => void;
+  canControl: boolean;
 };
 
 const DEFAULT_VIDEO_ID = 'dQw4w9WgXcQ';
@@ -42,21 +40,18 @@ export function YouTubePlayer({
   videoId,
   currentTime,
   isPlaying,
-  isHost,
-  onHostPlay,
-  onHostPause,
-  onHostSeek,
+  canControl,
 }: YouTubePlayerProps) {
+  const socket = useSocket();
   const containerRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const readyRef = useRef(false);
 
-  const isRemoteUpdate = useRef(false);
   const remoteTimerRef = useRef<number | null>(null);
+  const isRemoteUpdate = useRef(false);
 
   const lastVideoIdRef = useRef<string>('');
-  const lastTimeRef = useRef<number>(0);
-  const lastSeekEmitAtRef = useRef<number>(0);
+  const lastObservedTimeRef = useRef<number>(0);
 
   const effectiveVideoId = videoId?.trim() ? videoId.trim() : DEFAULT_VIDEO_ID;
 
@@ -75,16 +70,15 @@ export function YouTubePlayer({
           onReady: () => {
             readyRef.current = true;
             lastVideoIdRef.current = effectiveVideoId;
-            lastTimeRef.current = currentTime;
+            lastObservedTimeRef.current = currentTime;
           },
           onStateChange: (event) => {
-            if (!isHost || isRemoteUpdate.current) return;
-            const p = playerRef.current;
-            if (!p) return;
-
-            const t = p.getCurrentTime?.() ?? currentTime;
-            if (event.data === window.YT.PlayerState.PLAYING) onHostPlay(t);
-            if (event.data === window.YT.PlayerState.PAUSED) onHostPause(t);
+            if (!canControl || isRemoteUpdate.current) return;
+            if (event.data === window.YT.PlayerState.PLAYING) {
+              socket.emit('play');
+            } else if (event.data === window.YT.PlayerState.PAUSED) {
+              socket.emit('pause');
+            }
           },
         },
       });
@@ -100,13 +94,13 @@ export function YouTubePlayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Apply socket updates to the player (and guard against emitting back)
+  // Apply socket-driven updates only.
   useEffect(() => {
     const p = playerRef.current;
     if (!p || !readyRef.current) return;
 
-    isRemoteUpdate.current = true;
     if (remoteTimerRef.current) window.clearTimeout(remoteTimerRef.current);
+    isRemoteUpdate.current = true;
 
     if (effectiveVideoId !== lastVideoIdRef.current) {
       p.loadVideoById(effectiveVideoId, currentTime);
@@ -114,48 +108,27 @@ export function YouTubePlayer({
     } else {
       p.seekTo(currentTime, true);
     }
-
-    lastTimeRef.current = currentTime;
+    lastObservedTimeRef.current = currentTime;
 
     if (isPlaying) p.playVideo();
     else p.pauseVideo();
 
     remoteTimerRef.current = window.setTimeout(() => {
       isRemoteUpdate.current = false;
-    }, 150);
+    }, 300);
   }, [effectiveVideoId, currentTime, isPlaying]);
 
-  // Detect seekbar scrubs (time jumps) for host only
   useEffect(() => {
-    if (!isHost) return;
-    const p = playerRef.current;
-    if (!p || !readyRef.current) return;
-
+    if (!canControl) return;
     const id = window.setInterval(() => {
+      if (!playerRef.current || !readyRef.current) return;
       if (isRemoteUpdate.current) return;
-      const now = p.getCurrentTime?.();
-      if (typeof now !== 'number' || Number.isNaN(now)) return;
-      const prev = lastTimeRef.current;
+      const time = playerRef.current.getCurrentTime();
+      socket.emit('seek', { time });
+    }, 2000);
 
-      if (Math.abs(now - prev) > 1.25) {
-        const ms = Date.now();
-        if (ms - lastSeekEmitAtRef.current < 600) {
-          lastTimeRef.current = now;
-          return;
-        }
-        lastSeekEmitAtRef.current = ms;
-        lastTimeRef.current = now;
-        onHostSeek(now);
-        return;
-      }
-
-      lastTimeRef.current = now;
-    }, 500);
-
-    return () => {
-      window.clearInterval(id);
-    };
-  }, [isHost, onHostSeek]);
+    return () => window.clearInterval(id);
+  }, [canControl, socket]);
 
   return <div ref={containerRef} />;
 }

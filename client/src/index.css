@@ -11,3 +11,73 @@ input,
 button {
   font: inherit;
 }
+
+button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 4px;
+}
+
+.page-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.room-card {
+  width: min(1100px, 100%);
+}
+
+.room-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.side-panel {
+  border-right: 1px solid #eee;
+  padding-right: 10px;
+}
+
+.video-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.chat-box {
+  width: 100%;
+}
+
+.chat-messages {
+  height: 180px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.reactions-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.reactions-layer {
+  min-height: 24px;
+}
+
+.reaction-float {
+  font-size: 24px;
+  margin: 0 6px;
+}

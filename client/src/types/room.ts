@@ -1,4 +1,4 @@
-export type ParticipantRole = 'host' | 'participant';
+export type ParticipantRole = 'host' | 'moderator' | 'participant';
 
 export interface Participant {
   id: string;
@@ -12,5 +12,6 @@ export interface RoomState {
   videoId: string;
   currentTime: number;
   isPlaying: boolean;
+  lastPlayTimestamp?: number | null;
   participants: Participant[];
 }

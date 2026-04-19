@@ -1,5 +1,6 @@
 type RoomControlsProps = {
-  isHost: boolean;
+  canControl: boolean;
+  roleLabel: string;
   seekSeconds: string;
   videoIdInput: string;
   onSeekSecondsChange: (v: string) => void;
@@ -11,7 +12,8 @@ type RoomControlsProps = {
 };
 
 export function RoomControls({
-  isHost,
+  canControl,
+  roleLabel,
   seekSeconds,
   videoIdInput,
   onSeekSecondsChange,
@@ -23,12 +25,12 @@ export function RoomControls({
 }: RoomControlsProps) {
   return (
     <div>
-      <h3>Controls {isHost ? '(host)' : '(view only)'}</h3>
+      <h3>Controls ({roleLabel})</h3>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-        <button type="button" disabled={!isHost} onClick={onPlay}>
+        <button type="button" disabled={!canControl} onClick={onPlay}>
           Play
         </button>
-        <button type="button" disabled={!isHost} onClick={onPause}>
+        <button type="button" disabled={!canControl} onClick={onPause}>
           Pause
         </button>
         <label>
@@ -38,11 +40,11 @@ export function RoomControls({
             min={0}
             step={1}
             value={seekSeconds}
-            disabled={!isHost}
+            disabled={!canControl}
             onChange={(e) => onSeekSecondsChange(e.target.value)}
           />
         </label>
-        <button type="button" disabled={!isHost} onClick={onSeek}>
+        <button type="button" disabled={!canControl} onClick={onSeek}>
           Seek
         </button>
         <label>
@@ -50,12 +52,12 @@ export function RoomControls({
           <input
             type="text"
             value={videoIdInput}
-            disabled={!isHost}
+            disabled={!canControl}
             onChange={(e) => onVideoIdChange(e.target.value)}
             placeholder="YouTube video ID"
           />
         </label>
-        <button type="button" disabled={!isHost} onClick={onChangeVideo}>
+        <button type="button" disabled={!canControl} onClick={onChangeVideo}>
           Change video
         </button>
       </div>
