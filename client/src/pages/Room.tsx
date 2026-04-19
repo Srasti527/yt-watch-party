@@ -56,6 +56,26 @@ export function Room() {
     const onRoomUpdate = (r: RoomState | null) => {
       setRoom(r);
     };
+    const onVideoPlay = (payload: { isPlaying: boolean; currentTime: number }) => {
+      setRoom((prev) =>
+        prev
+          ? { ...prev, isPlaying: payload.isPlaying, currentTime: payload.currentTime }
+          : prev
+      );
+    };
+    const onVideoPause = (payload: { isPlaying: boolean; currentTime: number }) => {
+      setRoom((prev) =>
+        prev
+          ? { ...prev, isPlaying: payload.isPlaying, currentTime: payload.currentTime }
+          : prev
+      );
+    };
+    const onVideoSeek = (payload: { time: number }) => {
+      setRoom((prev) => (prev ? { ...prev, currentTime: payload.time } : prev));
+    };
+    const onVideoChange = (payload: { videoId: string }) => {
+      setRoom((prev) => (prev ? { ...prev, videoId: payload.videoId } : prev));
+    };
     const onRoleAssigned = (payload: { participants: RoomState['participants'] }) => {
       setRoom((prev) => (prev ? { ...prev, participants: payload.participants } : prev));
     };
@@ -94,6 +114,10 @@ export function Room() {
     socket.on('new-message', onNewMessage);
     socket.on('new-reaction', onNewReaction);
     socket.on('kicked', onKicked);
+    socket.on('video-play', onVideoPlay);
+    socket.on('video-pause', onVideoPause);
+    socket.on('video-seek', onVideoSeek);
+    socket.on('video-change', onVideoChange);
 
     return () => {
       socket.off('room-update', onRoomUpdate);
@@ -103,6 +127,10 @@ export function Room() {
       socket.off('new-message', onNewMessage);
       socket.off('new-reaction', onNewReaction);
       socket.off('kicked', onKicked);
+      socket.off('video-play', onVideoPlay);
+      socket.off('video-pause', onVideoPause);
+      socket.off('video-seek', onVideoSeek);
+      socket.off('video-change', onVideoChange);
     };
   }, [socket, navigate]);
 

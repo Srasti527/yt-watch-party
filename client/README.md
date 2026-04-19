@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+YouTube Watch Party System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Overview
 
-Currently, two official plugins are available:
+This project is a real-time YouTube Watch Party application where multiple users can watch videos together in sync. Actions like play, pause, seek, and video change are synchronized across all participants.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Features
 
-## React Compiler
+Core Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Real-time synchronization (play, pause, seek, video change)
+Room-based system (create/join via room ID)
+YouTube IFrame API integration
+WebSocket communication using Socket.IO
 
-## Expanding the ESLint configuration
+Role-Based Access Control
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Host (full control)
+Moderator (play, pause, seek, change video)
+Participant (view only)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Host Capabilities
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Assign roles to participants
+Remove participants
+Transfer host to another user
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Additional Features
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Sync button to re-align playback
+Leave room functionality
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Tech Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Frontend: React + TypeScript + Vite
+Backend: Node.js + Express
+Real-time: Socket.IO
+Video: YouTube IFrame API
+
+How It Works
+
+Users join a room using a room ID
+Host or moderator controls playback
+Server maintains room state
+Events are broadcast using WebSockets
+All clients stay synchronized
+
+Setup Instructions
+
+Backend
+
+cd server
+npm install
+npm start
+
+Frontend
+
+cd client
+npm install
+npm run dev
+
+
+Architecture
+
+Backend manages rooms and participants
+WebSockets handle real-time updates
+Role-based permissions enforced on server
+YouTube IFrame API controls video playback

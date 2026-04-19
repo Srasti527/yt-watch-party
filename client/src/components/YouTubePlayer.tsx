@@ -73,10 +73,11 @@ export function YouTubePlayer({
             lastObservedTimeRef.current = currentTime;
           },
           onStateChange: (event) => {
-            if (!canControl || isRemoteUpdate.current) return;
+            if (isRemoteUpdate.current) return;
             if (event.data === window.YT.PlayerState.PLAYING) {
               socket.emit('play');
-            } else if (event.data === window.YT.PlayerState.PAUSED) {
+            }
+            if (event.data === window.YT.PlayerState.PAUSED) {
               socket.emit('pause');
             }
           },
@@ -119,13 +120,18 @@ export function YouTubePlayer({
   }, [effectiveVideoId, currentTime, isPlaying]);
 
   useEffect(() => {
-    if (!canControl) return;
     const id = window.setInterval(() => {
       if (!playerRef.current || !readyRef.current) return;
       if (isRemoteUpdate.current) return;
       const time = playerRef.current.getCurrentTime();
-      socket.emit('seek', { time });
-    }, 2000);
+      const prev = lastObservedTimeRef.current;
+
+      if (Math.abs(time - prev) > 1.5 && canControl) {
+        socket.emit('seek', { time });
+      }
+
+      lastObservedTimeRef.current = time;
+    }, 1000);
 
     return () => window.clearInterval(id);
   }, [canControl, socket]);

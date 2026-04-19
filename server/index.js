@@ -124,12 +124,13 @@ io.on('connection', (socket) => {
       return;
     }
 
-    if (typeof time === 'number' && Number.isFinite(time) && time >= 0) {
-      room.currentTime = time;
-    }
     room.isPlaying = true;
     room.lastPlayTimestamp = Date.now();
     console.log('play:', room.roomId, room.currentTime);
+    io.to(room.roomId).emit('video-play', {
+      isPlaying: true,
+      currentTime: room.currentTime,
+    });
     broadcastRoom(room.roomId);
   });
 
@@ -143,12 +144,14 @@ io.on('connection', (socket) => {
 
     if (room.isPlaying && room.lastPlayTimestamp) {
       room.currentTime += (Date.now() - room.lastPlayTimestamp) / 1000;
-    } else if (typeof time === 'number' && Number.isFinite(time) && time >= 0) {
-      room.currentTime = time;
     }
     room.isPlaying = false;
     room.lastPlayTimestamp = null;
     console.log('pause:', room.roomId, room.currentTime);
+    io.to(room.roomId).emit('video-pause', {
+      isPlaying: false,
+      currentTime: room.currentTime,
+    });
     broadcastRoom(room.roomId);
   });
 
@@ -162,8 +165,11 @@ io.on('connection', (socket) => {
 
     if (typeof time !== 'number' || !Number.isFinite(time) || time < 0) return;
     room.currentTime = time;
-    room.lastPlayTimestamp = Date.now();
+    if (room.isPlaying) {
+      room.lastPlayTimestamp = Date.now();
+    }
     console.log('seek:', room.roomId, room.currentTime);
+    io.to(room.roomId).emit('video-seek', { time: room.currentTime });
     broadcastRoom(room.roomId);
   });
 
@@ -184,6 +190,7 @@ io.on('connection', (socket) => {
     room.isPlaying = false;
     room.lastPlayTimestamp = null;
     console.log('change-video:', room.roomId, videoId);
+    io.to(room.roomId).emit('video-change', { videoId: room.videoId });
     broadcastRoom(room.roomId);
   });
 
