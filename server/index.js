@@ -4,7 +4,13 @@ const cors = require('cors');
 const { Server } = require('socket.io');
 
 const app = express();
+
 app.use(cors());
+
+
+app.get('/', (req, res) => {
+  res.send('Watch Party Backend Running');
+});
 
 const httpServer = http.createServer(app);
 
@@ -287,6 +293,8 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(5000, () => {
-  console.log("PORT 5000 READY");
+const PORT = process.env.PORT || 5000;
+
+httpServer.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
