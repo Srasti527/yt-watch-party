@@ -58,5 +58,20 @@ Then the **video ID** is:
 favi7avxIag
 Because everything after youtu.be/ is the video ID, and the ?si=... part is just tracking info (not needed for embedding or syncing).
 
+##**Screenshots**
+
+
+###  Home Page
+![Home](assets/YTHome.png)
+
+###  Watch Room (Real-time Sync)
+![Room](assets/YTvideo.png)
+
+###   Roles System
+![Moderator](assets/YTmoderator.png)
+
+###  Features
+![Features](assets/YTfeatures.png)
+
 
 
