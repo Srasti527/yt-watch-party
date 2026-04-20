@@ -1,7 +1,7 @@
 # YouTube Watch Party
 
 ## Live Links
-- **Frontend (Live App)(Vercel)**: (yt-watch-party.vercel.app)
+- **Frontend (Live App)(Vercel)**: (https://yt-watch-party.vercel.app/)
 - **Backend  (WebSocket Server)(Render)**: (https://yt-watch-party-backend.onrender.com)
 
 ## Description
