@@ -1,8 +1,8 @@
 # YouTube Watch Party
 
 ## Live Links
-- **Frontend (Live App)(Vercel)**: `yt-watch-party.vercel.app`
-- **Backend  (WebSocket Server)(Render)**: `https://yt-watch-party-backend.onrender.com`
+- **Frontend (Live App)(Vercel)**: (yt-watch-party.vercel.app)
+- **Backend  (WebSocket Server)(Render)**: (https://yt-watch-party-backend.onrender.com)
 
 ## Description
 YouTube Watch Party is a real-time watch party application where multiple users can watch YouTube videos together in sync. The app uses WebSockets to synchronize playback actions (play, pause, seek, and video changes) across all connected users in the same room.
