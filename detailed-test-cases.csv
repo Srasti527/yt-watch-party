@@ -1,0 +1,16 @@
+Test Case ID,Module,Test Scenario,Preconditions,Test Steps,Test Data,Expected Result,Actual Result,Status,Priority
+TC-001,Input Validation,Create room with empty username,Home page is open,Leave username empty and click Create Room,Empty username,Room creation should be prevented and a validation message should appear,,Not Run,High
+TC-002,Input Validation,Join room with empty Room ID,Home page is open,"Enter username and leave Room ID empty, then click Join Room",Username Tester1; empty Room ID,Joining should be prevented and a validation message should appear,,Not Run,High
+TC-003,Room Creation,Create room with valid username,Home page is open,Enter username and click Create Room,Username Tester1,A room should be created and opened successfully,,Not Run,High
+TC-004,Room Joining,Join an existing room,Another browser session has created a room,"Enter username and existing Room ID, then click Join Room",Username Tester2; valid Room ID,User should enter the intended room,,Not Run,High
+TC-005,Room Joining,Join a nonexistent room,Home page is open,"Enter username and a room ID that does not exist, then click Join Room",Room ID qa-room-123,Application should handle the request without an unexpected error,,Not Run,High
+TC-006,Video Playback,Play a video,Room is open and a video is loaded,Click Play,Loaded YouTube video,Video should start playing,,Not Run,High
+TC-007,Video Playback,Pause a video,Video is playing,Click Pause,Playing video,Video should pause,,Not Run,High
+TC-008,Playback Synchronization,Check playback synchronization,Two users are in the same room,Start playback as host and observe the other session,Two browser sessions,Playback state should synchronize according to application design,,Not Run,High
+TC-009,Chat,Send a chat message,Room is open,Enter a message and submit it,Message: Hello everyone,Message should appear in chat as designed,,Not Run,Medium
+TC-010,User Roles,Check participant permissions,Host and participant are in the same room,Inspect the controls available to the participant,Participant session,Participant should only have the permissions allowed by the application,,Not Run,High
+TC-011,Participant Management,Remove a participant,Host and participant are in the same room,Use the host controls to remove the participant,Participant: Tester2,Participant should be removed according to the application's behavior,,Not Run,High
+TC-012,Navigation,Refresh the room page,User is inside a room,Refresh the browser,Active room,Application should handle refresh without an unexpected crash,,Not Run,Medium
+TC-013,Connection Handling,Disconnect a participant,Two users are in the same room,Close one user's browser session,Two browser sessions,Remaining session should handle the disconnection appropriately,,Not Run,Medium
+TC-014,Responsive UI,Check layout on a mobile viewport,Home page is open,Use browser developer tools to emulate a narrow screen,375px viewport,Controls should remain usable without unintended overlap,,Not Run,Low
+TC-015,Usability,Check validation message,Home page is open,Trigger a required-field validation error,Empty required field,Message should explain the problem clearly,,Not Run,Low
