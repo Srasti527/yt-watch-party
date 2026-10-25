@@ -1,5 +1,5 @@
 Test Case ID,Test Scenario,Execution Date,Environment,Actual Result,Status,Defect ID,Evidence / Notes
-TC-001,Create room with empty username,,Chrome / deployed application,,Not Run,,
+TC-001,Create room with empty username,25/10/2026 ,Chrome / deployed application,PASS,Run,,A pop-up appeared asking me to enter a username.
 TC-002,Join room with empty Room ID,,Chrome / deployed application,,Not Run,,
 TC-003,Create room with valid username,,Chrome / deployed application,,Not Run,,
 TC-004,Join an existing room,,Chrome / deployed application,,Not Run,,
